@@ -1,9 +1,14 @@
 #include <iostream>
+#include <vector>
+
 #include "glad.h"
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "mesh.hpp"
 #include "shader.hpp"
 
 #define FOV             (45.0f)
@@ -43,20 +48,16 @@ int main(int argc, char **argv) {
 
     Shader shader("../shaders/vert.glsl", "../shaders/frag.glsl");
 
-    unsigned int VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    std::vector<Vertex> vertices = {
+        Vertex { .Position = glm::vec3(0.5f, 0.5f, 0.0f) },
+        Vertex { .Position = glm::vec3(0.5f, -0.5f, 0.0f) },
+        Vertex { .Position = glm::vec3(-0.5f, -0.5f, 0.0f) },
+        Vertex { .Position = glm::vec3(-0.5f, 0.5f, 0.0f) },
+    };
+    std::vector<unsigned int> indices = { 0, 1, 3, 1, 2, 3};
+    std::vector<Texture> textures = {};
 
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
+    Mesh rect(vertices, indices, textures);
 
     while(!glfwWindowShouldClose(window)) {
         process_input(window);
@@ -78,16 +79,12 @@ int main(int argc, char **argv) {
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        rect.Draw(shader);
 
         glfwPollEvents();
 
         glfwSwapBuffers(window);
     }
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
     return 0;

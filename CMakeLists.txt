@@ -6,8 +6,10 @@ find_package(OpenGL REQUIRED)
 
 add_executable(${PROJECT_NAME} 
     src/main.cpp
+    src/mesh.cpp
     src/shader.cpp
     src/glad.c
+    include/mesh.hpp
     include/shader.hpp
     include/glad.h
 )
