@@ -2,6 +2,14 @@
 
 out vec4 FragColor;
 
+in vec2 TexCoord;
+
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_diffuse2;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_specular2;
+
 void main() {
-    FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    /* Add support for multiple textures */
+    FragColor = texture(texture_diffuse1, TexCoord);
 }

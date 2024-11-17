@@ -3,6 +3,7 @@
 
 #include "glad.h"
 #include "shader.hpp"
+#include "texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,11 +16,6 @@ struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
-};
-
-struct Texture {
-    unsigned int id;
-    std::string type;
 };
 
 class Mesh {

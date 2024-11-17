@@ -10,6 +10,7 @@
 
 #include "mesh.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 #define FOV             (45.0f)
 #define SCREEN_WIDTH    (800)
@@ -17,12 +18,6 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void process_input(GLFWwindow *window);
-
-float vertices[] = {
-    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-};
 
 int main(int argc, char **argv) {
     glfwInit();
@@ -47,15 +42,17 @@ int main(int argc, char **argv) {
     glEnable(GL_DEPTH_TEST);
 
     Shader shader("../shaders/vert.glsl", "../shaders/frag.glsl");
+    Texture texture("../resources/test.jpg", "texture_diffuse"); 
+
 
     std::vector<Vertex> vertices = {
-        Vertex { .Position = glm::vec3(0.5f, 0.5f, 0.0f) },
-        Vertex { .Position = glm::vec3(0.5f, -0.5f, 0.0f) },
-        Vertex { .Position = glm::vec3(-0.5f, -0.5f, 0.0f) },
-        Vertex { .Position = glm::vec3(-0.5f, 0.5f, 0.0f) },
+        Vertex { .Position = glm::vec3(0.5f, 0.5f, 0.0f), .TexCoords = glm::vec2(1.0f, 1.0f) },
+        Vertex { .Position = glm::vec3(0.5f, -0.5f, 0.0f), .TexCoords = glm::vec2(1.0f, 0.0f) },
+        Vertex { .Position = glm::vec3(-0.5f, -0.5f, 0.0f), .TexCoords = glm::vec2(0.0f, 0.0f)},
+        Vertex { .Position = glm::vec3(-0.5f, 0.5f, 0.0f), .TexCoords = glm::vec2(0.0f, 1.0f) },
     };
     std::vector<unsigned int> indices = { 0, 1, 3, 1, 2, 3};
-    std::vector<Texture> textures = {};
+    std::vector<Texture> textures = { texture };
 
     Mesh rect(vertices, indices, textures);
 
