@@ -8,7 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "camera.hpp"
 #include "mesh.hpp"
+#include "resource_manager.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
 
@@ -17,7 +19,7 @@
 #define SCREEN_HEIGHT   (600)
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void process_input(GLFWwindow *window);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
 int main(int argc, char **argv) {
     glfwInit();
@@ -25,13 +27,10 @@ int main(int argc, char **argv) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "opengl-game-engine", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "opengl-game-engine", nullptr, nullptr);
     glfwMakeContextCurrent(window);
+
+    glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -41,8 +40,8 @@ int main(int argc, char **argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("../shaders/vert.glsl", "../shaders/frag.glsl");
-    Texture texture("../resources/test.jpg", "texture_diffuse"); 
+    Shader shader = ResourceManager::LoadShader("../shaders/vert.glsl", "../shaders/frag.glsl", nullptr, "main");
+    Texture texture = ResourceManager::LoadTexture("../resources/test.jpg", false, "main");
 
 
     std::vector<Vertex> vertices = {
@@ -56,25 +55,16 @@ int main(int argc, char **argv) {
 
     Mesh rect(vertices, indices, textures);
 
-    while(!glfwWindowShouldClose(window)) {
-        process_input(window);
+    Camera camera(SCREEN_WIDTH, SCREEN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
 
+    while(!glfwWindowShouldClose(window)) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(FOV), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-        
-        shader.setMat4("model", model);
-        shader.setMat4("view", view);
-        shader.setMat4("projection", projection);
+        camera.Matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
+        camera.Inputs(window);
 
         rect.Draw(shader);
 
@@ -82,6 +72,8 @@ int main(int argc, char **argv) {
 
         glfwSwapBuffers(window);
     }
+
+    ResourceManager::Clear();
 
     glfwTerminate();
     return 0;
@@ -91,7 +83,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void process_input(GLFWwindow *window) {
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }

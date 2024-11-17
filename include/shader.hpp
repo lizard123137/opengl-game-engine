@@ -16,12 +16,18 @@ class Shader {
 public:
     unsigned int ID;
 
-    Shader(const char *vertexPath, const char *fragmentPath);
-    void use();
-    void setBool(const std::string &name, bool value) const;
-    void setInt(const std::string &name, int value) const;
-    void setFloat(const std::string &name, float value) const;
-    void setMat4(const std::string &name, glm::mat4 value) const;
+    Shader() { }
+    Shader  &use();
+    
+    void    Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
+
+    void    setBool(const std::string &name, bool value, bool useShader = false);
+    void    setInt(const std::string &name, int value, bool useShader = false);
+    void    setFloat(const std::string &name, float value, bool useShader = false);
+    void    setMat4(const std::string &name, glm::mat4 value, bool useShader = false);
+
+private:
+    void    checkCompileErrors(unsigned int object, std::string type);
 };
 
 #endif

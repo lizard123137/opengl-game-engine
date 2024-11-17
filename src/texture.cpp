@@ -1,30 +1,34 @@
 #include "texture.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
-Texture::Texture(const char *path, const char *type) {
-    path = path;
-    type = type;
 
-    glGenTextures(1, &ID);
-    glBindTexture(GL_TEXTURE_2D, ID);
+Texture::Texture()
+    :   Width(0),
+        Height(0),
+        Internal_Format(GL_RGB),
+        Image_Format(GL_RGB),
+        Wrap_S(GL_REPEAT),
+        Wrap_T(GL_REPEAT),
+        Filter_Min(GL_LINEAR),
+        Filter_Max(GL_LINEAR) {
+    glGenTextures(1, &this->ID);
+}
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+void Texture::Generate(unsigned int width, unsigned int height, unsigned char *data) {
+    this->Width = width;
+    this->Height = height;
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, this->ID);
+    glTexImage2D(GL_TEXTURE_2D, 0, this->Internal_Format, width, height, 0, this->Image_Format, GL_UNSIGNED_BYTE, data);
 
-    int width, height, nrChannels;
-    unsigned char *data  = stbi_load(path, &width, &height, &nrChannels, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
 
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD" << std::endl;
-    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
 
-    stbi_image_free(data);
+void Texture::Bind() const {
+    glBindTexture(GL_TEXTURE_2D, this->ID);
 }
