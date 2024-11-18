@@ -1,6 +1,4 @@
-#include "texture.hpp"
-
-
+#include <Graphics/texture.hpp>
 
 Texture::Texture()
     :   Width(0),

@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "mesh.hpp"
+#include <Graphics/mesh.hpp> 
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

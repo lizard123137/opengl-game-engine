@@ -1,9 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "glad.h"
-#include "shader.hpp"
-#include "texture.hpp"
+#include <Libs/glad.h>
+
+#include <Graphics/shader.hpp>
+#include <Graphics/texture.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -1,11 +1,11 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
-#include "glad.h"
-#include "stb_image.h"
+#include <Libs/glad.h>
+#include <Libs/stb_image.h>
 
-#include "shader.hpp"
-#include "texture.hpp"
+#include <Graphics/shader.hpp>
+#include <Graphics/texture.hpp>
 
 #include <map>
 #include <string>

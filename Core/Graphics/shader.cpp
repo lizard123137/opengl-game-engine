@@ -1,4 +1,4 @@
-#include "shader.hpp"
+#include <Graphics/shader.hpp>
 
 void Shader::Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource) {
     unsigned int sVertex, sFragment, sGeometry;

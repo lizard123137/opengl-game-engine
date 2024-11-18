@@ -1,4 +1,4 @@
-#include "model.hpp"
+#include <Graphics/model.hpp>
 
 Model::Model(char *path) {
     loadModel(path);

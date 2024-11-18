@@ -1,18 +1,21 @@
 #include <iostream>
 #include <vector>
+#include <filesystem>
 
-#include "glad.h"
+#include <Libs/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "camera.hpp"
-#include "mesh.hpp"
-#include "resource_manager.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
+#include <Utils/resource_manager.hpp>
+#include <Utils/window_manager.hpp>
+
+#include <Graphics/camera.hpp>
+#include <Graphics/mesh.hpp>
+#include <Graphics/shader.hpp>
+#include <Graphics/texture.hpp>
 
 #define FOV             (45.0f)
 #define SCREEN_WIDTH    (800)
@@ -22,14 +25,8 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
 int main(int argc, char **argv) {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "opengl-game-engine", nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-
+    GLFWwindow *window = WindowManager::InitWindow("Pong", SCREEN_WIDTH, SCREEN_HEIGHT);
+    
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -40,8 +37,9 @@ int main(int argc, char **argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader = ResourceManager::LoadShader("../shaders/vert.glsl", "../shaders/frag.glsl", nullptr, "main");
-    Texture texture = ResourceManager::LoadTexture("../resources/test.jpg", false, "main");
+    std::cout << std::filesystem::current_path() << std::endl;
+    Shader shader = ResourceManager::LoadShader("../../../Examples/Pong/shaders/vert.glsl", "../../..Examples/Pong/shaders/frag.glsl", nullptr, "main");
+    Texture texture = ResourceManager::LoadTexture("../../../Examples/Pong/resources/test.jpg", false, "main");
 
 
     std::vector<Vertex> vertices = {
@@ -59,12 +57,12 @@ int main(int argc, char **argv) {
 
     while(!glfwWindowShouldClose(window)) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
 
         camera.Matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
-        camera.Inputs(window);
+        //camera.Inputs(window);
 
         rect.Draw(shader);
 

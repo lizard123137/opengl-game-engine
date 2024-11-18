@@ -1,10 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "shader.hpp"
-#include "glad.h"
+#include <Libs/glad.h>
+
+#include <Graphics/shader.hpp>
 
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

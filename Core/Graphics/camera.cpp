@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include <Graphics/camera.hpp>
 
 Camera::Camera(int width, int height, glm::vec3 position) {
     this->width = width;

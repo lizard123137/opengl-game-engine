@@ -1,4 +1,4 @@
-#include "resource_manager.hpp"
+#include <Utils/resource_manager.hpp> 
 
 std::map<std::string, Shader>   ResourceManager::Shaders;
 std::map<std::string, Texture>  ResourceManager::Textures;
