@@ -8,7 +8,7 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
     return Shaders[name];
 }
 
-Shader ResourceManager::GetShader(std::string name) {
+Shader &ResourceManager::GetShader(std::string name) {
     return Shaders[name];
 }
 
@@ -17,7 +17,7 @@ Texture ResourceManager::LoadTexture(const char *file, bool alpha, std::string n
     return Textures[name];
 }
 
-Texture ResourceManager::GetTexture(std::string name) {
+Texture &ResourceManager::GetTexture(std::string name) {
     return Textures[name];
 }
 
@@ -80,6 +80,10 @@ Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
 
     int width, height, nrChannels;
     unsigned char *data = stbi_load(file, &width, &height, &nrChannels, 0);
+
+    if (data == NULL) {
+        std::cout << "ERROR::TEXTURE::FAILED_TO_READ_FILE" << std::endl;
+    }
 
     texture.Generate(width, height, data);
 

@@ -15,58 +15,52 @@
 #include <Graphics/camera.hpp>
 #include <Graphics/mesh.hpp>
 #include <Graphics/shader.hpp>
+#include <Graphics/sprite_renderer.hpp>
 #include <Graphics/texture.hpp>
 
-#define FOV             (45.0f)
-#define SCREEN_WIDTH    (800)
-#define SCREEN_HEIGHT   (600)
+const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_HEIGHT = 600;
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
+
+
 
 int main(int argc, char **argv) {
     GLFWwindow *window = WindowManager::InitWindow("Pong", SCREEN_WIDTH, SCREEN_HEIGHT);
-    
     glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    glEnable(GL_DEPTH_TEST);
 
     std::cout << std::filesystem::current_path() << std::endl;
-    Shader shader = ResourceManager::LoadShader("../../../Examples/Pong/shaders/vert.glsl", "../../..Examples/Pong/shaders/frag.glsl", nullptr, "main");
-    Texture texture = ResourceManager::LoadTexture("../../../Examples/Pong/resources/test.jpg", false, "main");
+    
+    ResourceManager::LoadShader("../../../Examples/Pong/shaders/vert.glsl", "../../..Examples/Pong/shaders/frag.glsl", nullptr, "sprite");
+    ResourceManager::LoadTexture("../../../Examples/Pong/resources/awesomeface.png", true, "test");
 
+    glm::mat4 projection = glm::ortho(
+        0.0f,
+        static_cast<float>(SCREEN_WIDTH),
+        static_cast<float>(SCREEN_HEIGHT),
+        0.0f,
+        -1.0f,
+        1.0f
+    );
 
-    std::vector<Vertex> vertices = {
-        Vertex { .Position = glm::vec3(0.5f, 0.5f, 0.0f), .TexCoords = glm::vec2(1.0f, 1.0f) },
-        Vertex { .Position = glm::vec3(0.5f, -0.5f, 0.0f), .TexCoords = glm::vec2(1.0f, 0.0f) },
-        Vertex { .Position = glm::vec3(-0.5f, -0.5f, 0.0f), .TexCoords = glm::vec2(0.0f, 0.0f)},
-        Vertex { .Position = glm::vec3(-0.5f, 0.5f, 0.0f), .TexCoords = glm::vec2(0.0f, 1.0f) },
-    };
-    std::vector<unsigned int> indices = { 0, 1, 3, 1, 2, 3};
-    std::vector<Texture> textures = { texture };
+    ResourceManager::GetShader("sprite").setInt("image", 0, true);
+    ResourceManager::GetShader("sprite").setMat4("projection", projection);
 
-    Mesh rect(vertices, indices, textures);
-
-    Camera camera(SCREEN_WIDTH, SCREEN_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+    SpriteRenderer renderer(ResourceManager::GetShader("sprite"));
 
     while(!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shader.use();
-
-        camera.Matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
-        //camera.Inputs(window);
-
-        rect.Draw(shader);
-
-        glfwPollEvents();
+        renderer.DrawSprite(
+            ResourceManager::GetTexture("test"),
+            glm::vec2(200.0f, 200.0f),
+            glm::vec2(300.0f, 400.0f),
+            45.0f,
+            glm::vec3(0.0f, 1.0f, 0.0f)
+        );
 
         glfwSwapBuffers(window);
     }
@@ -75,10 +69,6 @@ int main(int argc, char **argv) {
 
     glfwTerminate();
     return 0;
-}
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
