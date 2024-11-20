@@ -20,12 +20,15 @@ GLFWwindow* WindowManager::InitWindow(const char *name, int width, int height) {
     glfwMakeContextCurrent(window);
     
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl; // TODO: Currently the program will just go on to segfault
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        glfwTerminate();
+        exit(-1);
     }
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glViewport(0, 0, width, height);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     

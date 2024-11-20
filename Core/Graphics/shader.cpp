@@ -43,34 +43,59 @@ Shader &Shader::use() {
     return *this;
 }
 
-void Shader::setBool(const std::string &name, bool value, bool useShader) {
+void Shader::setBool(const std::string &name, const bool value, const bool useShader) {
     if (useShader)
         this->use();
-    glUniform1i(glGetUniformLocation(this->ID, name.c_str()), (int)value);
+
+    GLint uniformLocation = glGetUniformLocation(this->ID, name.c_str());
+    if (uniformLocation == -1)
+        std::cout << "ERROR::SHADER::COULDNT_FIND_UNIFORM: " << name << std::endl;
+    
+    glUniform1i(uniformLocation, (int)value);
 }
 
-void Shader::setInt(const std::string &name, int value, bool useShader) {
+void Shader::setInt(const std::string &name, const int value, const bool useShader) {
     if (useShader)
         this->use();
-    glUniform1i(glGetUniformLocation(this->ID, name.c_str()), value);
+
+    GLint uniformLocation = glGetUniformLocation(this->ID, name.c_str());
+    if (uniformLocation == -1)
+        std::cout << "ERROR::SHADER::COULDNT_FIND_UNIFORM: " << name << std::endl;
+
+    glUniform1i(uniformLocation, value);
 }
 
-void Shader::setFloat(const std::string &name, float value, bool useShader) {
+void Shader::setFloat(const std::string &name, const float value, const bool useShader) {
     if (useShader)
         this->use();
-    glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
+    
+    GLint uniformLocation = glGetUniformLocation(this->ID, name.c_str());
+    if (uniformLocation == -1)
+        std::cout << "ERROR::SHADER::COULDNT_FIND_UNIFORM: " << name << std::endl;
+
+    glUniform1f(uniformLocation, value);
 }
 
-void Shader::setMat4(const std::string &name, glm::mat4 &value, bool useShader) {
+void Shader::setMat4(const std::string &name, const glm::mat4 &value, const bool useShader) {
     if (useShader)
         this->use();
-    glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+    
+    GLint uniformLocation = glGetUniformLocation(this->ID, name.c_str());
+    if (uniformLocation == -1)
+        std::cout << "ERROR::SHADER::COULDNT_FIND_UNIFORM: " << name << std::endl;
+
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(value));
 }
     
-void Shader::setVec3f(const std::string &name, glm::vec3 &value, bool useShader) {
+void Shader::setVec3f(const std::string &name, const glm::vec3 &value, const bool useShader) {
     if (useShader)
         this->use();
-    glUniform3f(glGetUniformLocation(this->ID, name.c_str()), value.x, value.y, value.z);
+    
+    GLint uniformLocation = glGetUniformLocation(this->ID, name.c_str());
+    if (uniformLocation == -1)
+        std::cout << "ERROR::SHADER::COULDNT_FIND_UNIFORM: " << name << std::endl;
+
+    glUniform3f(uniformLocation, value.x, value.y, value.z);
 }
 
 void Shader::checkCompileErrors(unsigned int object, std::string type) {

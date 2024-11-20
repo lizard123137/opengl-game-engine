@@ -3,7 +3,7 @@
 std::map<std::string, Shader>   ResourceManager::Shaders;
 std::map<std::string, Texture>  ResourceManager::Textures;
 
-Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name) {
+Shader &ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name) {
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
@@ -12,7 +12,7 @@ Shader &ResourceManager::GetShader(std::string name) {
     return Shaders[name];
 }
 
-Texture ResourceManager::LoadTexture(const char *file, bool alpha, std::string name) {
+Texture &ResourceManager::LoadTexture(const char *file, bool alpha, std::string name) {
     Textures[name] = loadTextureFromFile(file, alpha);
     return Textures[name];
 }

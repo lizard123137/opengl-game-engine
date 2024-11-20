@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 
     std::cout << std::filesystem::current_path() << std::endl;
     
-    ResourceManager::LoadShader("../../../Examples/Pong/shaders/vert.glsl", "../../..Examples/Pong/shaders/frag.glsl", nullptr, "sprite");
+    ResourceManager::LoadShader("../../../Examples/Pong/shaders/vert.glsl", "../../../Examples/Pong/shaders/frag.glsl", nullptr, "sprite");
     ResourceManager::LoadTexture("../../../Examples/Pong/resources/awesomeface.png", true, "test");
 
     glm::mat4 projection = glm::ortho(
@@ -43,15 +43,15 @@ int main(int argc, char **argv) {
         1.0f
     );
 
-    ResourceManager::GetShader("sprite").setInt("image", 0, true);
-    ResourceManager::GetShader("sprite").setMat4("projection", projection);
-
     SpriteRenderer renderer(ResourceManager::GetShader("sprite"));
+
+    ResourceManager::GetShader("sprite").setInt("image", true);
+    ResourceManager::GetShader("sprite").setMat4("projection", projection, true);
 
     while(!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         renderer.DrawSprite(
