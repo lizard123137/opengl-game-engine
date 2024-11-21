@@ -12,6 +12,8 @@ add_library(Core STATIC
     Graphics/model.hpp
     Graphics/shader.cpp
     Graphics/shader.hpp
+    Graphics/shape_renderer.cpp
+    Graphics/shape_renderer.hpp
     Graphics/sprite_renderer.cpp
     Graphics/sprite_renderer.hpp
     Graphics/texture.cpp

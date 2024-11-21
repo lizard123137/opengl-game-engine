@@ -1,6 +1,6 @@
 #include <Graphics/sprite_renderer.hpp>
 
-SpriteRenderer::SpriteRenderer(Shader &shader) {
+SpriteRenderer::SpriteRenderer(Shader& shader) {
     this->shader = shader;
     this->initRenderData();
 }
@@ -26,7 +26,7 @@ void SpriteRenderer::DrawSprite(
     model = glm::scale(model, glm::vec3(size, 1.0f));
 
     this->shader.setMat4("model", model, true);
-    this->shader.setVec3f("spriteColor", color, true);
+    this->shader.setVec3f("color", color);
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();
@@ -56,8 +56,10 @@ void SpriteRenderer::initRenderData() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
