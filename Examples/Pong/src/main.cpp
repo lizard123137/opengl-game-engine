@@ -103,6 +103,32 @@ int main(int argc, char **argv) {
         if (game_keys[GLFW_KEY_DOWN])
             player_h += static_cast<unsigned int>(PADDLE_SPEED);
 
+        // Update computer position
+        // TODO fix integer overflow
+        if (computer_h > ball_pos.y)
+            computer_h -= static_cast<unsigned int>(PADDLE_SPEED);
+        else if (computer_h < ball_pos.y)
+            computer_h += static_cast<unsigned int>(PADDLE_SPEED);
+
+        // Check for collisions
+        // Player collision
+        if(ball_pos.x <= PADDLE_WIDTH + PADDLE_OFFSET && ball_pos.x > PADDLE_OFFSET) {
+            if(ball_pos.y < player_h + PADDLE_HEIGHT && ball_pos.y > player_h) {
+                // TODO play bounce sound
+                // TODO add bound angle based on ball pos
+                ball_vel *= -1;
+            }
+        }
+        // Enemy collision
+        if(ball_pos.x >= SCREEN_WIDTH - PADDLE_WIDTH - PADDLE_OFFSET && ball_pos.x < SCREEN_WIDTH - PADDLE_OFFSET) {
+            if(ball_pos.y < computer_h + PADDLE_HEIGHT && ball_pos.y > computer_h) {
+                // TODO play bounce sound
+                // TODO add bound angle based on ball pos
+                ball_vel *= -1;
+            }
+        }
+
+
         // Player paddle
         renderer.DrawRect(
             glm::vec2(PADDLE_OFFSET - PADDLE_WIDTH/2.0f, player_h - PADDLE_HEIGHT/2.0f),
