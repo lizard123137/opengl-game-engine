@@ -9,6 +9,7 @@ I will probably try to rewrite some of the dependencies from scratch at some poi
 - `glad`
 - `assimp`
 - `stb_image`
+- `miniaudio`
 
 The code in this repository is heavily based on the materials provided by the website [learnopengl.com](https://learnopengl.com). It is a great resource and I highly recommend it.
 

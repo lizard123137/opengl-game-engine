@@ -21,6 +21,8 @@ add_library(Core STATIC
     
     Libs/glad.c
     Libs/glad.h
+    Libs/miniaudio.c
+    Libs/miniaudio.h
     Libs/stb_image.c
     Libs/stb_image.h
 
