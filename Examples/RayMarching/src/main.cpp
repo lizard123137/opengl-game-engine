@@ -28,7 +28,7 @@ const unsigned int BALL_SIZE = 10;
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
 int main(int argc, char **argv) {
-    GLFWwindow *window = WindowManager::InitWindow("Pong", SCREEN_WIDTH, SCREEN_HEIGHT);
+    GLFWwindow *window = WindowManager::InitWindow("RayMarching", SCREEN_WIDTH, SCREEN_HEIGHT);
     glfwSetKeyCallback(window, key_callback);
 
     std::cout << std::filesystem::current_path() << std::endl;
