@@ -147,10 +147,10 @@ int main(int argc, char **argv) {
             PADDLE_COLOR
         );
 
-        renderer.DrawRect(
+        renderer.DrawCircle(
             glm::vec2(ball_pos.x, ball_pos.y),
-            glm::vec2(BALL_SIZE, BALL_SIZE),
-            0.0f,
+            glm::vec2(1.0f, 1.0f),
+            BALL_SIZE,
             BALL_COLOR
         );
 

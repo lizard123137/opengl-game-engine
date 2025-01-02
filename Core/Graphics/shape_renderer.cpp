@@ -4,7 +4,8 @@ ShapeRenderer::ShapeRenderer(Shader& shader) {
     this->shader = shader;
 }
 
-void ShapeRenderer::DrawRect(
+void ShapeRenderer::DrawVertices(
+    std::vector<float> vertices,
     glm::vec2 position,
     glm::vec2 size,
     float rotate,
@@ -12,23 +13,13 @@ void ShapeRenderer::DrawRect(
 ) {
     unsigned int VAO, VBO;
 
-    float vertices[] = {
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-    };
-
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -48,8 +39,48 @@ void ShapeRenderer::DrawRect(
     this->shader.setVec3f("color", color);
 
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size());
     glBindVertexArray(0);
 
     glDeleteVertexArrays(1, &VAO);
+}
+
+void ShapeRenderer::DrawRect(
+    glm::vec2 position,
+    glm::vec2 size,
+    float rotate,
+    glm::vec3 color
+) {
+    std::vector<float> vertices = {
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+    };
+
+    this->DrawVertices(vertices, position, size, rotate, color);
+}
+    
+void ShapeRenderer::DrawCircle(
+    glm::vec2 position,
+    glm::vec2 size,
+    float r,
+    glm::vec3 color
+) {
+    std::vector<float> vertices = {};
+
+    for (int i = 0; i <= CIRCLE_DETAIL; i++) {
+        float angle = 2.0f * M_PI * (float)(i) / (float)(CIRCLE_DETAIL);
+        float x, y;
+        if (angle != 0.0f) {
+            x = r * cos(angle);
+            y = r * sin(angle);
+        } else {
+            x = r;
+        }
+        vertices.push_back(x);
+        vertices.push_back(y);
+    }
+
+    this->DrawVertices(vertices, position, size, 0.0, color);
 }
